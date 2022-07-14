@@ -24,7 +24,6 @@ const triviaData = {
 };
 
 
-
 // Variables to keep track of score
 let playerScore, triviaIndex
 
@@ -45,6 +44,7 @@ const renderHTML          = (paramWhere, paramDisplay) => paramWhere.innerText =
 
 const displayButton = paramButton => document.querySelectorAll(paramButton)[0]
 
+// Handle for onClick 
 const handleTrivia = paramBoolean => {
     getUserTriviaAnswer && getTriviaAnswer(triviaIndex) === paramBoolean ? updatePlayerScore() : null;
     nextQuestion();
@@ -66,17 +66,21 @@ function replay() {
 }
 
 function displayTriviaButton(flag) {
-    if (flag === true) {
-        displayButton('.btn-container-question').style.display = 'none'
-        displayButton('.btn-container-replay').style.display = 'block'
-    } else {
-        displayButton('.btn-container-question').style.display = 'block'
-        displayButton('.btn-container-replay').style.display = 'none'
+    switch (flag) {
+        case true:
+            displayButton('.btn-container-question').style.display = 'none'
+            displayButton('.btn-container-replay').style.display = 'block'
+            break
+            
+        default:
+            displayButton('.btn-container-question').style.display = 'block'
+            displayButton('.btn-container-replay').style.display = 'none'
+            break
     }
 }
 
 
 // Start
-displayTriviaButton(false)
 resetNumber()
+displayTriviaButton(false)
 renderHTML(questionDisplay, getTriviaQuestion(triviaIndex))
