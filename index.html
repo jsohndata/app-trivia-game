@@ -14,9 +14,14 @@
 </header>
 
 <main>
-    <button class="btn-true"   onclick="handleTrue()">True</button>
-    <button class="btn-false"  onclick="handleFalse()">False</button>
-    <button class="btn-replay" onclick="replay()" style="opacity: 0;">Replay</button>
+    <div class="btn-container-question">
+        <button onclick="handleTrivia(true)">True</button>
+        <button onclick="handleTrivia(false)">False</button>
+    </div>
+
+    <div  class="btn-container-replay">
+        <button onclick="replay()">Replay</button>
+    </div>
 </main>
 
 <footer>

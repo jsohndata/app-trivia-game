@@ -2,7 +2,7 @@ const triviaData = {
     "trivaList": [
         {
             "triviaQ": "The capital of Florida is Miami.",
-            "triviaA": false
+            "triviaA": true
         },
         {
             "triviaQ": "The capital of California is Sacramento.",
@@ -10,11 +10,11 @@ const triviaData = {
         },
         {
             "triviaQ": "The United States was founded in 1998.",
-            "triviaA": false
+            "triviaA": true
         },
         {
             "triviaQ": "Albert Einstein is Magician",
-            "triviaA": false
+            "triviaA": true
         },
         {
             "triviaQ": "The inventor of the first computer is Alan Turing.",
@@ -23,68 +23,60 @@ const triviaData = {
     ]
 };
 
-const question = document.querySelectorAll('h1')[0];
+
 
 // Variables to keep track of score
-let playerScore = 0
-let triviaIndex = 0
+let playerScore, triviaIndex
 
+// Setting multiple variable with the same value
+const resetNumber = () => playerScore=triviaIndex = 0;
 
-question.innerText = triviaData.trivaList[triviaIndex].triviaQ;
+// Question DOM
+const questionDisplay = document.querySelectorAll('h1')[0];
 
-function handleTrue() {
-    const currentQuestionObject = triviaData.trivaList[triviaIndex]
+const updateIndex         = () => triviaIndex ++
+const updatePlayerScore   = () => playerScore ++
 
-    if (currentQuestionObject && currentQuestionObject.triviaA == true) {
-        playerScore ++
-    }
+const getUserTriviaAnswer = () => triviaData.trivaList[triviaIndex]
+const getTriviaDataTotal  = () => triviaData.trivaList.length
+const getTriviaAnswer     = paramIndex => triviaData.trivaList[paramIndex].triviaA
+const getTriviaQuestion   = paramIndex => triviaData.trivaList[paramIndex].triviaQ
+const renderHTML          = (paramWhere, paramDisplay) => paramWhere.innerText = paramDisplay
 
-    nextQuestion()
-}
+const displayButton = paramButton => document.querySelectorAll(paramButton)[0]
 
-function handleFalse() {
-    const currentQuestionObject = triviaData.trivaList[triviaIndex]
-
-    if (currentQuestionObject && currentQuestionObject.triviaA == false) {
-        playerScore ++
-    }
-
-    nextQuestion()
+const handleTrivia = paramBoolean => {
+    getUserTriviaAnswer && getTriviaAnswer(triviaIndex) === paramBoolean ? updatePlayerScore() : null;
+    nextQuestion();
 }
 
 function nextQuestion() {
-    triviaIndex ++
-    if (triviaIndex >= triviaData.trivaList.length) {
+    updateIndex();
 
-        const yourFinalScore = `Your score is ${playerScore} / ${triviaData.trivaList.length}.`
-        question.innerText = yourFinalScore
-
-        shouldHideAnswerButtons(true)
-    } else {
-        question.innerText = triviaData.trivaList[triviaIndex].triviaQ
-    }
+    if (triviaIndex >= getTriviaDataTotal()) {
+        displayTriviaButton(true)
+        renderHTML(questionDisplay, `Your score is ${playerScore} / ${getTriviaDataTotal()}.`)        
+    } else renderHTML(questionDisplay, getTriviaQuestion(triviaIndex))
 }
 
 function replay() {
-    shouldHideAnswerButtons(false)
-    playerScore = 0
-    triviaIndex = 0
-
-    question.innerText = triviaData.trivaList[triviaIndex].triviaQ
+    displayTriviaButton(false)
+    resetNumber()
+    renderHTML(questionDisplay, getTriviaQuestion(0))
 }
 
-function shouldHideAnswerButtons(flag) {
-    const buttonTrue = document.querySelectorAll('.btn-true')[0]
-    const buttonFalse = document.querySelectorAll('.btn-false')[0]
-    const buttonReplay = document.querySelectorAll('.btn-replay')[0]
-
-    if (flag == true) {
-        buttonTrue.style.opacity = 0
-        buttonFalse.style.opacity = 0
-        buttonReplay.style.opacity = 1        
+function displayTriviaButton(flag) {
+    if (flag === true) {
+        displayButton('.btn-container-question').style.display = 'none'
+        displayButton('.btn-container-replay').style.display = 'block'
     } else {
-        buttonTrue.style.opacity = 1
-        buttonFalse.style.opacity = 1
-        buttonReplay.style.opacity = 0        
+        displayButton('.btn-container-question').style.display = 'block'
+        displayButton('.btn-container-replay').style.display = 'none'
     }
 }
+
+
+// Start
+displayTriviaButton(false)
+resetNumber()
+renderHTML(questionDisplay, getTriviaQuestion(triviaIndex))
