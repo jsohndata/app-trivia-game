@@ -1,0 +1,24 @@
+{
+    "questions": [
+        {
+            "question": "The capital of Florida is Miami.",
+            "answer": false
+        },
+        {
+            "question": "The capital of California is Sacramento.",
+            "answer": true
+        },
+        {
+            "question": "The United States was founded in 1998.",
+            "answer": false
+        },
+        {
+            "question": "Albert Einstein is Magician",
+            "answer": false
+        },
+        {
+            "question": "The inventor of the first computer is Alan Turing.",
+            "answer": true
+        }
+    ]
+}
