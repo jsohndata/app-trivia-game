@@ -1,90 +1,107 @@
 const triviaData = {
     "trivaList": [
         {
-            "triviaQ": "The capital of Florida is Miami.",
-            "triviaA": false
-        },
-        {
-            "triviaQ": "The capital of California is Sacramento.",
+            "triviaQ": "1. Trivia Question",
             "triviaA": true
         },
         {
-            "triviaQ": "The United States was founded in 1998.",
-            "triviaA": false
+            "triviaQ": "2. Trivia Question",
+            "triviaA": true
         },
         {
-            "triviaQ": "Albert Einstein is Magician",
-            "triviaA": false
+            "triviaQ": "3. Trivia Question",
+            "triviaA": true
         },
         {
-            "triviaQ": "The inventor of the first computer is Alan Turing.",
+            "triviaQ": "4. Trivia Question",
+            "triviaA": true
+        },
+        {
+            "triviaQ": "5. Trivia Question",
             "triviaA": true
         }
     ]
 };
 
-const question = document.querySelectorAll('h1')[0];
 
 // Variables to keep track of score
-let playerScore = 0
-let triviaIndex = 0
+let playerScore, triviaIndex
+
+// Setting multiple variable with the same value
+const resetNumber = () => playerScore=triviaIndex = 0;
+
+const locationH1           = () => document.querySelectorAll('h1')[0];
+const locationProgressText = () => document.querySelectorAll('.position')[0];
+const locationProgressBar  = () => document.querySelectorAll('.progress-bar')[0];
+
+const getUserTriviaAnswer = () => triviaData.trivaList[triviaIndex]
+const getTriviaDataTotal  = () => triviaData.trivaList.length
+const getTriviaAnswer     = paramIndex => triviaData.trivaList[paramIndex].triviaA
+const getTriviaQuestion   = paramIndex => triviaData.trivaList[paramIndex].triviaQ
+
+const calcIndex           = () => triviaIndex ++
+const calcPlayerScore     = () => playerScore ++
+const calcRandomTrivia    = () => triviaData.trivaList.sort( () => Math.random() -0.5)
+const calcScorePercetange = (paramPlayerScore, paramTriviaTotal) => paramPlayerScore / paramTriviaTotal * 100
+
+const renderPosition      = (paramIndex, paramTotal) => `Position: ${paramIndex + 1} / ${paramTotal + 1}`
+const renderFinalMessage  = (paramScore, paramTotal) => `Your score is ${paramScore} / ${paramTotal}.\n ${calcScorePercetange(paramScore, paramTotal)}%`
+const renderHTML          = (paramWhere, paramDisplay) => paramWhere.innerText = paramDisplay
+const renderProgressBar   = (paramWhere, paramIndex) => paramWhere.width = paramIndex * 70
+const renderButton        = paramButton => document.querySelectorAll(paramButton)[0]
 
 
-question.innerText = triviaData.trivaList[triviaIndex].triviaQ;
 
-function handleTrue() {
-    const currentQuestionObject = triviaData.trivaList[triviaIndex]
-
-    if (currentQuestionObject && currentQuestionObject.triviaA == true) {
-        playerScore ++
-    }
-
-    nextQuestion()
+// Handle for onClick 
+const handleTrivia = paramBoolean => {
+    getUserTriviaAnswer && getTriviaAnswer(triviaIndex) === paramBoolean ? calcPlayerScore() : null;
+    nextQuestion();
 }
 
-function handleFalse() {
-    const currentQuestionObject = triviaData.trivaList[triviaIndex]
 
-    if (currentQuestionObject && currentQuestionObject.triviaA == false) {
-        playerScore ++
-    }
-
-    nextQuestion()
-}
 
 function nextQuestion() {
-    triviaIndex ++
-    if (triviaIndex >= triviaData.trivaList.length) {
+    renderHTML(locationProgressText(), renderPosition(triviaIndex + 1, getTriviaDataTotal() ) )
+    calcIndex();
+    renderProgressBar(locationProgressBar(), triviaIndex )
 
-        const yourFinalScore = `Your score is ${playerScore} / ${triviaData.trivaList.length}.`
-        question.innerText = yourFinalScore
-
-        shouldHideAnswerButtons(true)
-    } else {
-        question.innerText = triviaData.trivaList[triviaIndex].triviaQ
-    }
+    if (triviaIndex >= getTriviaDataTotal()) {
+        displayTriviaButton(true)
+        renderHTML(locationH1(), renderFinalMessage(playerScore, getTriviaDataTotal()))
+    } else renderHTML(locationH1(), getTriviaQuestion(triviaIndex))
 }
+
+
 
 function replay() {
-    shouldHideAnswerButtons(false)
-    playerScore = 0
-    triviaIndex = 0
-
-    question.innerText = triviaData.trivaList[triviaIndex].triviaQ
+    displayTriviaButton(false)
+    resetNumber()
+    calcRandomTrivia()
+    renderProgressBar(locationProgressBar(), 0.5 )
+    renderHTML(locationProgressText(), renderPosition(triviaIndex, getTriviaDataTotal() ) )
+    renderHTML(locationH1(), getTriviaQuestion(0))
 }
 
-function shouldHideAnswerButtons(flag) {
-    const buttonTrue = document.querySelectorAll('.btn-true')[0]
-    const buttonFalse = document.querySelectorAll('.btn-false')[0]
-    const buttonReplay = document.querySelectorAll('.btn-replay')[0]
 
-    if (flag == true) {
-        buttonTrue.style.opacity = 0
-        buttonFalse.style.opacity = 0
-        buttonReplay.style.opacity = 1        
-    } else {
-        buttonTrue.style.opacity = 1
-        buttonFalse.style.opacity = 1
-        buttonReplay.style.opacity = 0        
+
+function displayTriviaButton(flag) {
+    switch (flag) {
+        case true:
+            renderButton('.btn-container-question').style.display = 'none'
+            renderButton('.btn-container-replay').style.display = 'block'
+            break
+            
+        default:
+            renderButton('.btn-container-question').style.display = 'block'
+            renderButton('.btn-container-replay').style.display = 'none'
+            break
     }
 }
+
+
+// Start
+resetNumber()
+displayTriviaButton(false)
+renderProgressBar(locationProgressBar(), 0.5 )
+renderHTML(locationProgressText(), renderPosition(triviaIndex, getTriviaDataTotal() ) )
+renderHTML(locationH1(), getTriviaQuestion(triviaIndex))
