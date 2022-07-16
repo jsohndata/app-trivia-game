@@ -1,4 +1,4 @@
-# About
+# App Trivia Game
 Mini trivia app based on boolean response. 
 
 #demo
